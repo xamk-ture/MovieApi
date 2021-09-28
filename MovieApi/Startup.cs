@@ -12,6 +12,8 @@ using MovieApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MovieApi
@@ -35,10 +37,7 @@ namespace MovieApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieApi", Version = "v1" });
             });
 
-    //        services.AddControllers()
-    //.AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
-    //.AddNewtonsoftJson(options => options.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects);
-
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

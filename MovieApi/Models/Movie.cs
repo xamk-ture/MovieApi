@@ -16,6 +16,8 @@ namespace MovieApi.Models
         public ICollection<Crew> Crews { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
+
+        public string SecretInfo { get; set; }
    
     }
 }

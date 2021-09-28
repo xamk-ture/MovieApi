@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MovieApi.DataTransferObjects.Outgoing;
 using MovieApi.Models;
 
 namespace MovieApi.Controllers
@@ -14,31 +17,61 @@ namespace MovieApi.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly MovieContext _context;
+        private readonly IMapper _mapper;
 
-        public MoviesController(MovieContext context)
+        public MoviesController(MovieContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            //Tämä koodi vastaa alla olevaa koodia, ProjectTo<MovieDto>(_mapper.ConfigurationProvider) ajaa saman asian mitä alla oleva koodi
+            //var movies = await _context.Movies
+            //    .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
+            //var movieDtos = _mapper.Map<List<MovieDto>>(movies);
+
+            //return movieDtos;
+
+            return await _context.Movies
+                .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
+                .AsNoTracking()
+                .ProjectTo<MovieDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(long id)
+        public async Task<ActionResult<MovieDto>> GetMovie(long id, bool showOnlyCriticReviews = false)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            Movie movie;
+
+            var allReviewTexts = _context.Movies.Include(x => x.Reviews)
+                .SingleOrDefault(x => x.Id == id)?
+                .Reviews.Where(x => x.IsCriticRated == showOnlyCriticReviews)
+                .Select(x => x.Text);
+
+            movie = await _context.Movies
+                .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
+                .Include(x => x.Crews).ThenInclude(x => x.Director).ThenInclude(x => x.Person)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == id);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return movie;
+            var movieDto = _mapper.Map<MovieDto>(movie);
+            movieDto.Actors = _mapper.Map<List<PersonDto>>(movie.Crews.Where(x => x.Actor != null).Select(x => x.Actor.Person)).ToList();
+
+            return movieDto;
         }
 
         // PUT: api/Movies/5
@@ -85,7 +118,7 @@ namespace MovieApi.Controllers
 
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovie(long id)
+        public async Task<IActionResult> DeleteMovie(string id)
         {
             var movie = await _context.Movies.FindAsync(id);
             if (movie == null)
