@@ -47,17 +47,64 @@ namespace MovieApi.Controllers
         }
 
         // GET: api/Movies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MovieDto>> GetMovie(long id, bool showOnlyCriticReviews = false)
+        [HttpGet("GetMovieWithReviews/{id}")]
+        public async Task<ActionResult<MovieDto>> GetMovieWithReviews(long id)
         {
-            Movie movie;
+            var movie = await _context.Movies.Include(x => x.Reviews).SingleOrDefaultAsync(x => x.Id == id);
 
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            //Code below represents what _mapper.Map<MovieDto>(movie) actually does "behind secenes"
+            //var movieDto = new MovieDto
+            //{
+            //    Name = movie.Name,
+            //    Description = movie.Description,
+            //    ReleaseDate = movie.ReleaseDate,
+            //    Id = movie.Id
+            //};
+
+            //foreach (var review in movie.Reviews)
+            //{
+            //    var reviewDto = new ReviewDto()
+            //    {
+            //        Id = review.Id,
+            //        Rating = review.Rating,
+            //        IsCriticRated = review.IsCriticRated,
+            //        MovieId = review.MovieId
+            //    };
+
+            //    movieDto.Reviews.Add(reviewDto);
+            //}
+
+            return _mapper.Map<MovieDto>(movie);
+        }
+
+        [HttpGet("GetMovieReviewTexts/{id}")]
+        public async Task<ActionResult<IEnumerable<string>>> GetMovieReviewTexts(long id, bool showOnlyCriticReviews = false)
+        {
+            //Example query where only fetch all movies reviews texts and nothing else and with optional query parameter that shows only critics or non critics texts
             var allReviewTexts = _context.Movies.Include(x => x.Reviews)
                 .SingleOrDefault(x => x.Id == id)?
                 .Reviews.Where(x => x.IsCriticRated == showOnlyCriticReviews)
                 .Select(x => x.Text);
 
-            movie = await _context.Movies
+            return allReviewTexts.ToList();
+        }
+
+        // GET: api/Movies/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MovieDto>> GetMovie(long id)
+        {
+            //Example query where only fetch all movies reviews texts and nothing else and with optional query parameter
+            //var allReviewTexts = _context.Movies.Include(x => x.Reviews)
+            //    .SingleOrDefault(x => x.Id == id)?
+            //    .Reviews.Where(x => x.IsCriticRated == showOnlyCriticReviews)
+            //    .Select(x => x.Text);
+
+            var movie = await _context.Movies
                 .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
                 .Include(x => x.Crews).ThenInclude(x => x.Director).ThenInclude(x => x.Person)
                 .AsNoTracking()
