@@ -7,6 +7,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MovieApi.DataTransferObjects.Incoming;
 using MovieApi.DataTransferObjects.Outgoing;
 using MovieApi.Models;
 
@@ -130,6 +131,8 @@ namespace MovieApi.Controllers
                 return BadRequest();
             }
 
+            movie.UpdatedAt = DateTime.Now;
+
             _context.Entry(movie).State = EntityState.Modified;
 
             try
@@ -154,12 +157,14 @@ namespace MovieApi.Controllers
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<MovieDtoIn>> PostMovie(MovieDtoIn movie)
         {
-            _context.Movies.Add(movie);
+            var entityMovie = _mapper.Map<Movie>(movie);
+            _context.Movies.Add(entityMovie);
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+            return CreatedAtAction("GetMovie", new { id = entityMovie.Id }, movie);
         }
 
         // DELETE: api/Movies/5
