@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MovieApi.DataTransferObjects.Outgoing
 {
-    public class PersonDto
+    public class PersonDto : BaseDto
     {
         public long PersonId { get; set; }
 

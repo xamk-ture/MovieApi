@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MovieApi.Models
+namespace MovieApi.DataTransferObjects
 {
-    public class BaseModel
+    public class BaseDto
     {
-        [Required]
         public long Id { get; set; }
-
-        [Required]
         public DateTime CreatedAt { get; set; }
-
-        [Required]
         public DateTime UpdatedAt { get; set; }
     }
 }

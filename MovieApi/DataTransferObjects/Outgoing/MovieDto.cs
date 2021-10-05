@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MovieApi.DataTransferObjects.Outgoing
 {
-    public class MovieDto
+    public class MovieDto : BaseDto
     {
-        public long Id { get; set; }
-
         public string Name { get; set; }
 
         public DateTime ReleaseDate { get; set; }
@@ -20,7 +18,9 @@ namespace MovieApi.DataTransferObjects.Outgoing
 
         public List<ReviewDto> Reviews { get; set; }
 
-        public List<PersonDto> Actors { get; set; }
+        public List<MovieActorDto> Actors { get; set; }
+
+        //public List<ActorDto> Directors { get; set; }
 
     }
 

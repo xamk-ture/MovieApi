@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MovieApi.DataTransferObjects.Outgoing
 {
-    public class ReviewDto
+    public class ReviewDto : BaseDto
     {
-        public long Id { get; set; }
-
         public double Rating { get; set; }
 
         public bool IsCriticRated { get; set; }
