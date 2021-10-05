@@ -19,8 +19,6 @@ namespace MovieApi.Models
 
         public DbSet<Director> Directors { get; set; }
 
-        public DbSet<Crew> Crews { get; set; }
-
         public DbSet<Review> Reviews { get; set; }
 
         public DbSet<Person> Persons { get; set; }

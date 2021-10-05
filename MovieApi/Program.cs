@@ -76,11 +76,11 @@ namespace MovieApi
 
             context.Actors.Add(actor);
 
-            var actorCrew = new Crew();
-            actorCrew.ActorId = actor.Id;
-            actorCrew.MovieId = movieId;
+            //var actorCrew = new Crew();
+            //actorCrew.ActorId = actor.Id;
+            //actorCrew.MovieId = movieId;
 
-            context.Crews.Add(actorCrew);
+            //context.Crews.Add(actorCrew);
 
 
             var directorPerson = new Person();
@@ -95,11 +95,11 @@ namespace MovieApi
 
             context.Directors.Add(director);
 
-            var directorCrew = new Crew();
-            directorCrew.Director = director;
-            directorCrew.MovieId = movieId;
+            //var directorCrew = new Crew();
+            //directorCrew.Director = director;
+            //directorCrew.MovieId = movieId;
 
-            context.Crews.Add(directorCrew);
+            //context.Crews.Add(directorCrew);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -11,6 +11,5 @@ namespace MovieApi.Models
 
         public Person Person { get; set; }
 
-        public ICollection<Crew> Crews { get; set; }
     }
 }

@@ -39,11 +39,13 @@ namespace MovieApi.Controllers
 
             //return movieDtos;
 
-            return await _context.Movies
-                .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
-                .AsNoTracking()
-                .ProjectTo<MovieDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            //return await _context.Movies
+            //    .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
+            //    .AsNoTracking()
+            //    .ProjectTo<MovieDto>(_mapper.ConfigurationProvider)
+            //    .ToListAsync();
+
+            return null;
         }
 
         // GET: api/Movies/5
@@ -104,21 +106,23 @@ namespace MovieApi.Controllers
             //    .Reviews.Where(x => x.IsCriticRated == showOnlyCriticReviews)
             //    .Select(x => x.Text);
 
-            var movie = await _context.Movies
-                .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
-                .Include(x => x.Crews).ThenInclude(x => x.Director).ThenInclude(x => x.Person)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Id == id);
+            //var movie = await _context.Movies
+            //    .Include(x => x.Crews).ThenInclude(x => x.Actor).ThenInclude(x => x.Person)
+            //    .Include(x => x.Crews).ThenInclude(x => x.Director).ThenInclude(x => x.Person)
+            //    .AsNoTracking()
+            //    .SingleOrDefaultAsync(x => x.Id == id);
 
-            if (movie == null)
-            {
-                return NotFound();
-            }
+            //if (movie == null)
+            //{
+            //    return NotFound();
+            //}
 
-            var movieDto = _mapper.Map<MovieDto>(movie);
-            movieDto.Actors = _mapper.Map<List<PersonDto>>(movie.Crews.Where(x => x.Actor != null).Select(x => x.Actor.Person)).ToList();
+            //var movieDto = _mapper.Map<MovieDto>(movie);
+            //movieDto.Actors = _mapper.Map<List<PersonDto>>(movie.Crews.Where(x => x.Actor != null).Select(x => x.Actor.Person)).ToList();
 
-            return movieDto;
+            //return movieDto;
+
+            return null;
         }
 
         // PUT: api/Movies/5
