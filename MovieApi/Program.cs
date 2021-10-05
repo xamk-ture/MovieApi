@@ -23,7 +23,8 @@ namespace MovieApi
                 var context = services.GetRequiredService<MovieContext>();
 
                 GenerateMovieData(context);
-                GenerateCrewData(context, 1);
+                GenerateActorDataToMovie(context, 1);
+                GenerateDirectorDataToMovie(context, 1);
 
                 context.SaveChanges();
             }
@@ -31,15 +32,22 @@ namespace MovieApi
             host.Run();
         }
 
+        /// <summary>
+        /// Generates actor data to movie
+        /// </summary>
+        /// <param name="context">Database context</param>
+        /// <param name="movieId">MovieId to what movie to generate the data</param>
         private static void GenerateMovieData(MovieContext context)
         {
+            if (context.Movies.Any())
+                return;
+
             //You can add here new objects to the in memory database, so you have some data when you are starting up the project
             var movie1 = new Movie()
             {
                 Name = "Testi elokuva",
                 Description = "Testi kuvaus",
-                SecretInfo = "Ei asiakkaille nähtäväksi!",
-                Reviews = new List<Review>() { new Review() { Rating = 5, Text = "Viisi tähteä" }, new Review() { Rating = 3, Text = "Kolme tähteä", IsCriticRated = true } }
+                SecretInfo = "Ei asiakkaille nähtäväksi!"
             };
 
             context.Movies.Add(movie1);
@@ -56,51 +64,47 @@ namespace MovieApi
         }
 
         /// <summary>
-        /// Generates crew data to given movie
+        /// Generates director data to movie
         /// </summary>
         /// <param name="context">Database context</param>
         /// <param name="movieId">MovieId to what movie to generate the data</param>
-        private static void GenerateCrewData(MovieContext context, long movieId)
+        private static void GenerateActorDataToMovie(MovieContext context, long movieId)
         {
+            if (context.Actors.Any())
+                return;
+
             var actorPerson = new Person();
             actorPerson.FirstName = "Pena";
-            actorPerson.Id = 1;
+            actorPerson.LastName = "Näyttelijä";
 
             context.Persons.Add(actorPerson);
 
-
             var actor = new Actor();
-            actor.Id = 1;
+            actor.MovieId = movieId;
             actor.PersonId = actorPerson.Id;
             actorPerson.Actor = actor;
 
             context.Actors.Add(actor);
+        }
 
-            //var actorCrew = new Crew();
-            //actorCrew.ActorId = actor.Id;
-            //actorCrew.MovieId = movieId;
-
-            //context.Crews.Add(actorCrew);
-
+        private static void GenerateDirectorDataToMovie(MovieContext context, long movieId)
+        {
+            if (context.Directors.Any())
+                return;
 
             var directorPerson = new Person();
-            directorPerson.FirstName = "Ohjaaja mies";
-            directorPerson.Id = 2;
+            directorPerson.FirstName = "Ohjaaja";
+            directorPerson.LastName = "Nainen";
 
             context.Persons.Add(directorPerson);
 
             var director = new Director();
-            director.Id = 1;
+            director.MovieId = movieId;
             director.Person = directorPerson;
 
             context.Directors.Add(director);
-
-            //var directorCrew = new Crew();
-            //directorCrew.Director = director;
-            //directorCrew.MovieId = movieId;
-
-            //context.Crews.Add(directorCrew);
         }
+
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
