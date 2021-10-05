@@ -165,7 +165,7 @@ namespace MovieApi.Controllers
 
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovie(string id)
+        public async Task<IActionResult> DeleteMovie(long id)
         {
             var movie = await _context.Movies.FindAsync(id);
             if (movie == null)

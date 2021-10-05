@@ -31,7 +31,8 @@ namespace MovieApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<MovieContext>(opt => opt.UseInMemoryDatabase("MovieList"));
+            services.AddDbContext<MovieContext>(opt => opt.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MovieDb;Trusted_Connection=True;"));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieApi", Version = "v1" });
