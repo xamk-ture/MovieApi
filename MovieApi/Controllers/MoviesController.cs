@@ -28,6 +28,7 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies
         [HttpGet]
+        [AuthorizationAttribute("GetAllMovies")]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
         {
             //Tämä koodi vastaa alla olevaa koodia, ProjectTo<MovieDto>(_mapper.ConfigurationProvider) ajaa saman asian mitä alla oleva koodi
@@ -49,6 +50,7 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies/5
         [HttpGet("GetMovieWithReviews/{id}")]
+        [AuthorizationAttribute]
         public async Task<ActionResult<MovieDto>> GetMovieWithReviews(long id)
         {
             var movie = await _context.Movies.Include(x => x.Reviews).SingleOrDefaultAsync(x => x.Id == id);
@@ -84,6 +86,7 @@ namespace MovieApi.Controllers
         }
 
         [HttpGet("GetMovieReviewTexts/{id}")]
+        [AuthorizationAttribute]
         public async Task<ActionResult<IEnumerable<string>>> GetMovieReviewTexts(long id, bool showOnlyCriticReviews = false)
         {
             //Example query where only fetch all movies reviews texts and nothing else and with optional query parameter that shows only critics or non critics texts
@@ -97,6 +100,7 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
+        [AuthorizationAttribute]
         public async Task<ActionResult<MovieDto>> GetMovie(long id)
         {
             //Example query where only fetch all movies reviews texts and nothing else and with optional query parameter
@@ -124,6 +128,7 @@ namespace MovieApi.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [AuthorizationAttribute]
         public async Task<IActionResult> PutMovie(long id, Movie movie)
         {
             if (id != movie.Id)
@@ -157,6 +162,7 @@ namespace MovieApi.Controllers
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [AuthorizationAttribute]
         public async Task<ActionResult<MovieDtoIn>> PostMovie(MovieDtoIn movie)
         {
             var entityMovie = _mapper.Map<Movie>(movie);
@@ -169,6 +175,7 @@ namespace MovieApi.Controllers
 
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
+        [AuthorizationAttribute]
         public async Task<IActionResult> DeleteMovie(long id)
         {
             var movie = await _context.Movies.FindAsync(id);
