@@ -129,19 +129,18 @@ namespace MovieApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [AuthorizationAttribute]
-        public async Task<IActionResult> PutMovie(long id, Movie movie)
+        public async Task<IActionResult> PutMovie(long id, MovieDtoIn movie)
         {
             if (id != movie.Id)
             {
                 return BadRequest();
             }
 
-            movie.UpdatedAt = DateTime.Now;
-
-            _context.Entry(movie).State = EntityState.Modified;
-
             try
             {
+                var movieEntity = await _context.Movies.FindAsync(id);
+                movieEntity = _mapper.Map(movie, movieEntity);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

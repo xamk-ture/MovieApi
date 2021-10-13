@@ -8,6 +8,8 @@ namespace MovieApi.DataTransferObjects.Incoming
 {
     public class MovieDtoIn
     {
+        public long Id { get; set; }
+
         public string Name { get; set; }
 
         public DateTime ReleaseDate { get; set; }
