@@ -23,6 +23,7 @@ namespace MovieApi
                 var context = services.GetRequiredService<MovieContext>();
 
                 GenerateMovieData(context);
+                GenerateCategories(context);
                 GenerateActorDataToMovie(context, 1);
                 GenerateDirectorDataToMovie(context, 1);
 
@@ -30,6 +31,18 @@ namespace MovieApi
             }
 
             host.Run();
+        }
+
+        private static void GenerateCategories(MovieContext context)
+        {
+            if (context.Categories.Any())
+                return;
+
+            var horrorCategory = new Category() { Name = "Horror" };
+            var comedyCategory = new Category() { Name = "Comedy" };
+
+            context.Add(horrorCategory);
+            context.Add(comedyCategory);
         }
 
         /// <summary>

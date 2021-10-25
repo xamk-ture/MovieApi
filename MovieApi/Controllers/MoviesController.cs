@@ -28,7 +28,6 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies
         [HttpGet]
-        [AuthorizationAttribute("GetAllMovies")]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
         {
             //Tämä koodi vastaa alla olevaa koodia, ProjectTo<MovieDto>(_mapper.ConfigurationProvider) ajaa saman asian mitä alla oleva koodi
@@ -43,6 +42,7 @@ namespace MovieApi.Controllers
 
             return await _context.Movies
                 .Include(x => x.Actors).ThenInclude(x => x.Person)
+                .Include(x => x.MovieCategories).ThenInclude(x => x.Category)
                 .AsNoTracking()
                 .ProjectTo<MovieDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();

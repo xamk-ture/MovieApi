@@ -19,6 +19,8 @@ namespace MovieApi.Models
 
         public ICollection<Director> Directors { get; set; }
 
+        public ICollection<MovieCategory> MovieCategories { get; set; }
+
         public string SecretInfo { get; set; }
    
     }

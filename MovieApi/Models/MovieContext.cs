@@ -24,6 +24,11 @@ namespace MovieApi.Models
 
         public DbSet<Person> Persons { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<MovieCategory> MovieCategories { get; set; }
+
+
         public override int SaveChanges()
         {
             AddTimestamps();

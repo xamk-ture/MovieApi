@@ -20,7 +20,7 @@ namespace MovieApi.DataTransferObjects.Outgoing
 
         public List<MovieActorDto> Actors { get; set; }
 
-        //public List<ActorDto> Directors { get; set; }
+        public List<string> Categories { get; set; }
 
     }
 
@@ -28,7 +28,12 @@ namespace MovieApi.DataTransferObjects.Outgoing
     {
         public MovieDtoProfile()
         {
-            CreateMap<Models.Movie, MovieDto>().ReverseMap();
+            //For categories property this mapper firstly selects Movie entitys MoviesCategories property and then
+            //it selects all MovieCategories Category.Name propertys and creates new list to map easily all categories name
+            //to the dto Categories property
+            CreateMap<Models.Movie, MovieDto>()
+                .ForMember(movieDto => movieDto.Categories, 
+                x => x.MapFrom(movieEntity => new List<string>(movieEntity.MovieCategories.Select(c => c.Category.Name))));
         }
     }
 }
