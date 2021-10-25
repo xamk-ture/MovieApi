@@ -138,7 +138,12 @@ namespace MovieApi.Controllers
 
             try
             {
+                //Since we are using dtoIn object here as incoming parameter we first have to fetch the entity from database
                 var movieEntity = await _context.Movies.FindAsync(id);
+
+                //Then we override entity objects data with the MovieDtoIn data by using mapper.
+                //This just puts automatically values to the properties what is shared between objects and thus modifies the
+                //entity object, what puts the entity object to EntityState.Modified-state
                 movieEntity = _mapper.Map(movie, movieEntity);
 
                 await _context.SaveChangesAsync();
