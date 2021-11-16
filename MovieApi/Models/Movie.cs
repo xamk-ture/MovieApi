@@ -21,6 +21,8 @@ namespace MovieApi.Models
 
         public ICollection<MovieCategory> MovieCategories { get; set; }
 
+        public ICollection<Genre> Genres { get; set; }
+
         public string SecretInfo { get; set; }
    
     }

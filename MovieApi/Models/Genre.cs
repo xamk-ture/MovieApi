@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace MovieApi.Models
 {
-    public class Category : BaseModel
+    public class Genre : BaseModel
     {
         public string Name { get; set; }
 
-        public ICollection<MovieCategory> MovieCategories { get; set; }
+        public ICollection<Movie> Movies { get; set; }
+
     }
 }

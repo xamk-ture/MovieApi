@@ -28,6 +28,8 @@ namespace MovieApi.Models
 
         public DbSet<MovieCategory> MovieCategories { get; set; }
 
+        public DbSet<Genre> Genres { get; set; }
+
 
         public override int SaveChanges()
         {

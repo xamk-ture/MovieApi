@@ -48,6 +48,21 @@ namespace MovieApi.Controllers
                 .ToListAsync();
         }
 
+
+        // GET: api/Movies
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Genre>>> GetMovieGenres(long id)
+        {
+            //Fetching genres via genres table
+            var movieGenres = await _context.Genres.Where(x => x.Movies.Any(x => x.Id == id)).ToArrayAsync();
+
+            //Fetching genres via movies table
+            var movieGenres2 = await _context.Movies.Where(x => x.Id == id).Select(x => x.Genres).ToArrayAsync();
+
+            return movieGenres;
+        }
+
+
         // GET: api/Movies/5
         [HttpGet("GetMovieWithReviews/{id}")]
         [AuthorizationAttribute]
@@ -85,18 +100,7 @@ namespace MovieApi.Controllers
             return _mapper.Map<MovieDto>(movie);
         }
 
-        [HttpGet("GetMovieReviewTexts/{id}")]
-        [AuthorizationAttribute]
-        public async Task<ActionResult<IEnumerable<string>>> GetMovieReviewTexts(long id, bool showOnlyCriticReviews = false)
-        {
-            //Example query where only fetch all movies reviews texts and nothing else and with optional query parameter that shows only critics or non critics texts
-            var allReviewTexts = _context.Movies.Include(x => x.Reviews)
-                .SingleOrDefault(x => x.Id == id)?
-                .Reviews.Where(x => x.IsCriticRated == showOnlyCriticReviews)
-                .Select(x => x.Text);
-
-            return allReviewTexts.ToList();
-        }
+       
 
         // GET: api/Movies/5
         [HttpGet("{id}")]

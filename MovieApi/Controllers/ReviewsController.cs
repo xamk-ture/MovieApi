@@ -20,6 +20,26 @@ namespace MovieApi.Controllers
             _context = context;
         }
 
+        [HttpGet("GetMovieReviewTexts/{movieId}")]
+        [AuthorizationAttribute]
+        public async Task<ActionResult<IEnumerable<string>>> GetMovieReviewTexts(long movieId, bool showOnlyCriticReviews = false)
+        {
+            //Example query 1
+            var allMovieReviewsExample1 = await _context.Movies.Include(x => x.Reviews)
+                .SingleOrDefaultAsync(x => x.Id == movieId);
+
+            var allReviewTexts = allMovieReviewsExample1.Reviews.Where(x => x.IsCriticRated == showOnlyCriticReviews).Select(x => x.Text);
+
+            var allMovieReviewsExample2 = await _context.Reviews.Where(x => x.MovieId == movieId && x.IsCriticRated == showOnlyCriticReviews).ToArrayAsync();
+
+            //return example 1
+            return allReviewTexts.ToList();
+
+            //retun example 2 (not returning unless removing return from above)
+            return allMovieReviewsExample2.Select(x => x.Text).ToList();
+
+        }
+
         [HttpGet("GetMovieReviews/{movieId}")]
         public async Task<ActionResult<IEnumerable<Review>>> GetMovieReviews(long movieId)
         {
@@ -29,8 +49,7 @@ namespace MovieApi.Controllers
         }
 
         [HttpGet("GetMovieReviewsByRating/{movieId},{rating}")]
-        public async Task<ActionResult<IEnumerable<Review>>> GetMovieReviewsByRating([FromQuery] long movieId
-            , [FromQuery] double rating)
+        public async Task<ActionResult<IEnumerable<Review>>> GetMovieReviewsByRating([FromQuery] long movieId, [FromQuery] double rating)
         {
             var movieReviews = await _context.Reviews.Where(x => x.MovieId == movieId && x.Rating == rating).ToArrayAsync();
 
