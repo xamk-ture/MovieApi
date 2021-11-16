@@ -28,6 +28,15 @@ namespace MovieApi.Controllers
             return movieReviews;
         }
 
+        [HttpGet("GetMovieReviewsByRating/{movieId},{rating}")]
+        public async Task<ActionResult<IEnumerable<Review>>> GetMovieReviewsByRating([FromQuery] long movieId
+            , [FromQuery] double rating)
+        {
+            var movieReviews = await _context.Reviews.Where(x => x.MovieId == movieId && x.Rating == rating).ToArrayAsync();
+
+            return movieReviews;
+        }
+
         // GET: api/Reviews
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
